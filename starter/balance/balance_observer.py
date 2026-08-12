@@ -1,12 +1,6 @@
 # balance_observer.py
 from abc import ABC, abstractmethod
-
-class IBalanceObserver(ABC):
-    @abstractmethod
-    def update(self, balance, transaction):
-        """Handle balance updates."""
-        raise NotImplementedError("Subclasses must implement update method.")
-
+from balance.base_types import IBalanceObserver
 
 class PrintObserver(IBalanceObserver):
     def update(self, balance, transaction):
