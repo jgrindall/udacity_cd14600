@@ -1,11 +1,15 @@
 # base_types.py
 from abc import ABC, abstractmethod
-from .balance import Balance
+from typing import TYPE_CHECKING
+
 from transaction.transaction import Transaction
+
+if TYPE_CHECKING:
+    from .balance import Balance
 
 class IBalanceObserver(ABC):
     @abstractmethod
-    def update(self, balance: Balance, transaction: Transaction | None = None):
+    def update(self, balance: "Balance", transaction: Transaction | None = None):
         """Handle balance updates."""
         raise NotImplementedError("Subclasses must implement update method.")
 
