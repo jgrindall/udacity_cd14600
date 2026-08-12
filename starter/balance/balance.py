@@ -37,7 +37,12 @@ class Balance(BalanceObserverSubject):
         Args:
             transaction (Transaction): The transaction to apply.
         """
-        pass
+        if transaction.category == TransactionCategory.INCOME:
+            self.add_income(transaction.amount)
+        elif transaction.category == TransactionCategory.EXPENSE:
+            self.add_expense(transaction.amount)
+        else:
+            raise ValueError(f"Unknown transaction category: {transaction.category}")
 
     def get_balance(self):
         """Get the current net balance."""
