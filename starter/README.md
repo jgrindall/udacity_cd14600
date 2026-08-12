@@ -42,3 +42,20 @@ How each improved the design
 Any trade-offs encountered during implementation
 Submission Instructions
 If you’d like to work on the project locally, you can clone the repository and submit your solution by sharing a link to your GitHub repo. Please include a brief reflection either in the README file or as a separate text file in the repo. Alternatively, you can use the provided workspace to complete the project and submit it directly there.
+
+
+Break Down Tests
+test_balance.py → Verifies correct implementation of the Singleton Balance class.
+test_transaction.py → Confirms transactions update balances correctly.
+test_transaction_adapter.py → Ensures external income data is correctly adapted into Transaction objects.
+test_balance_observer.py → Validates that low-balance alerts are triggered at the correct threshold.
+Project Instructions
+Implement Singleton Balance Class – Ensure only one balance object exists throughout the app.
+Complete Transaction Class – Handle income and expense transactions.
+Implement Adapter Pattern – Adapt external freelance income data into internal Transaction objects.
+Implement Observer Pattern – Create a low balance observer that triggers an alert when funds drop too low.
+Add Unit Tests – Write tests for all implemented functionality.
+Choose and Implement a Fourth Pattern – Pick one additional design pattern (e.g., Strategy, Command, Decorator, etc.) and integrate it into your project.
+Provide a Reflection – Add a short write-up in your repo (README or separate file) explaining your design choices.
+
+
