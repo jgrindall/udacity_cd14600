@@ -1,23 +1,20 @@
 # balance.py
 from typing import Union, Optional
 from transaction.transaction_category import TransactionCategory
+from abc import ABC, abstractmethod
+
 
 class Balance:
     """Singleton to track the balance."""
-
-
-    _instance = None
+    _instance: Optional["Balance"] = None
 
     #always intialize the balance to 0, always int so dimes/pence are exact.
     _balance: int = 0
 
-    def __new__(cls):
+    @classmethod
+    def get_instance(cls):
         if cls._instance is None:
-            print("No instance exists yet, making one")
-            instance = super().__new__()
-            cls._instance = instance
-        else:
-            print("Instance already exists")
+            cls._instance = cls()
         return cls._instance
 
     def __init__(self):

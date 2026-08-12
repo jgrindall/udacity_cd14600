@@ -10,9 +10,14 @@ Required Steps
 
 1. Implement a Singleton Balance class
 Ensure only one instance of the balance manager exists across the application using the Singleton pattern.
+DONE
+
+
 
 2. Complete the Transaction class
 Finish the Transaction class using an enum to represent the transaction type (INCOME, EXPENSE).
+?
+
 
 3. Implement the Adapter pattern
 Complete a TransactionAdapter class that converts external freelance income (with invoice ID and project details) into a compatible Transaction object.
