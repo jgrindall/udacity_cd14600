@@ -17,13 +17,20 @@ DONE
 2. Complete the Transaction class
 Finish the Transaction class using an enum to represent the transaction type (INCOME, EXPENSE).
 ?
+DONE
 
 
 3. Implement the Adapter pattern
 Complete a TransactionAdapter class that converts external freelance income (with invoice ID and project details) into a compatible Transaction object.
 
+DONE
+
+
+
 4. Implement the Observer pattern
 Create and register a LowBalanceAlertObserver that gets notified and triggers an alert when the user’s balance falls below a defined threshold and PrintBalance Observer that gets triggered when there is a change in the balance.
+DONE
+
 
 5. Choose and Implement One Additional Pattern (Student’s Choice)
 You will select one additional design pattern to implement from the course curriculum:
@@ -33,14 +40,22 @@ Students must document:
 Why they chose this pattern
 Where it fits into the app
 How it improves flexibility, testability, or scalability
+
+
 6. Write Unit Tests
 Create unit tests for the Balance, Transaction, Adapter, Observer, and any custom pattern implementation.
+
+
 
 7. Run and Demonstrate the Application
 Use the provided main.py script to simulate the app.
 
+
+
 8. Reflect and Document
 Include a short reflection explaining:
+
+
 
 The four design patterns used
 How each improved the design
@@ -51,16 +66,31 @@ If you’d like to work on the project locally, you can clone the repository and
 
 Break Down Tests
 test_balance.py → Verifies correct implementation of the Singleton Balance class.
+
+
 test_transaction.py → Confirms transactions update balances correctly.
+
+
 test_transaction_adapter.py → Ensures external income data is correctly adapted into Transaction objects.
+
+
 test_balance_observer.py → Validates that low-balance alerts are triggered at the correct threshold.
+
+
 Project Instructions
+
 Implement Singleton Balance Class – Ensure only one balance object exists throughout the app.
+
 Complete Transaction Class – Handle income and expense transactions.
-Implement Adapter Pattern – Adapt external freelance income data into internal Transaction objects.
+Implement Adapter Pattern – Adapt external freelance income data into internal 
+Transaction objects.
+
 Implement Observer Pattern – Create a low balance observer that triggers an alert when funds drop too low.
+
 Add Unit Tests – Write tests for all implemented functionality.
+
 Choose and Implement a Fourth Pattern – Pick one additional design pattern (e.g., Strategy, Command, Decorator, etc.) and integrate it into your project.
+
 Provide a Reflection – Add a short write-up in your repo (README or separate file) explaining your design choices.
 
 

@@ -23,4 +23,5 @@ class TransactionAdapter:
         # get the amount
         amount = self.external_transaction.amount
         # and use a real TransactionCategory. self.typ is always income, so we use INCOME!
+        # throw away description and invoice_id
         return Transaction(amount, TransactionCategory.INCOME)
