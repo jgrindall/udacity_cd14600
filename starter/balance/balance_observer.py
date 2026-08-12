@@ -25,4 +25,5 @@ class LowBalanceAlertObserver(IBalanceObserver):
         if balance < self.threshold:
             print(f"Alert! Low balance: {balance} < {self.threshold}")
             self.alert_triggered = True
-
+        else:
+            self.alert_triggered = False
