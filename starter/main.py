@@ -1,7 +1,7 @@
 """This module serves as the entry point for the program."""
 from balance.balance import Balance
-from balance.balance_observer import LowBalanceAlertObserver
-from balance.balance_observer import PrintObserver
+from starter.balance.balance_manager import LowBalanceAlertObserver
+from starter.balance.balance_manager import PrintObserver
 from transaction.transaction import Transaction
 from transaction.transaction_category import TransactionCategory
 from transaction.transaction_adapter import TransactionAdapter

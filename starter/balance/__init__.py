@@ -1,2 +1,2 @@
 from .balance import Balance
-from .balance_observer import IBalanceObserver, PrintObserver, LowBalanceAlertObserver
+from .balance_manager import IBalanceObserver, PrintObserver, LowBalanceAlertObserver
