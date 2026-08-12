@@ -1,60 +1,130 @@
-# balance.py
 from typing import Optional
-from transaction.transaction_category import TransactionCategory
 from abc import ABC, abstractmethod
-from balance.base_types import BalanceObserverSubject
+
+class Command(ABC):
+
+    @property
+    def room(self):
+        return self._room
+
+    def __init__(self, room):
+        self._room = room
+
+    @abstractmethod
+    def execute(self):
+        pass
+
+    @abstractmethod
+    def undo(self):
+        pass
 
 
-class Balance(BalanceObserverSubject):
-    """Singleton to track the balance."""
-    _instance: Optional["Balance"] = None
+class LightOn(Command):
 
-    #always intialize the balance to 0, always int so dimes/pence are exact.
-    _balance: int = 0
+    def execute(self):
+        self._room.light["status"] = 1
 
-    @classmethod
-    def get_instance(cls):
-        if cls._instance is None:
-            cls._instance = cls()
-        return cls._instance
+    def undo(self):
+        self._room.light["status"] = 0
 
+class LightOff(Command):
+    def execute(self):
+        self._room.light["status"] = 0
+
+    def undo(self):
+        self._room.light["status"] = 1
+
+class LightUp(Command):
+    def execute(self):
+        if(self._room.light["status"] == 0):
+            raise Exception("Light is off. Cannot increase brightness.")
+        self._room.light["value"] += 1
+
+    def undo(self):
+        if(self._room.light["status"] == 0):
+            raise Exception("Light is off. Cannot decrease brightness.")
+        self._room.light["value"] -= 1
+
+
+class LightDown(Command):
+    def execute(self):
+        if(self._room.light["status"] == 0):
+            raise Exception("Light is off. Cannot decrease brightness.")
+        self._room.light["value"] -= 1
+
+    def undo(self):
+        if(self._room.light["status"] == 0):
+            raise Exception("Light is off. Cannot increase brightness.")
+        self._room.light["value"] += 1
+
+
+
+
+class FanOn(Command):
+    def execute(self):
+        self._room.fan["status"] = 1
+
+    def undo(self):
+        self._room.fan["status"] = 0
+
+
+class FanOff(Command):
+    def execute(self):
+        self._room.fan["status"] = 0
+
+    def undo(self):
+        self._room.fan["status"] = 1
+
+
+
+class FanUp(Command):
+    def execute(self):
+        if(self._room.fan["status"] == 0):
+            raise Exception("Fan is off. Cannot increase speed.")
+        self._room.fan["value"] += 1
+
+    def undo(self):
+        if(self._room.fan["status"] == 0):
+            raise Exception("Fan is off. Cannot decrease speed.")
+        self._room.fan["value"] -= 1
+
+class FanDown(Command):
+    def execute(self):
+        if(self._room.fan["status"] == 0):
+            raise Exception("Fan is off. Cannot decrease speed.")
+        self._room.fan["value"] -= 1
+
+    def undo(self):
+        if(self._room.fan["status"] == 0):
+            raise Exception("Fan is off. Cannot increase speed.")
+        self._room.fan["value"] += 1
+
+
+
+class Room:
     def __init__(self):
-        self._balance = 0
+        self.light = {"status": 0, "value": 0}
+        self.fan = {"status": 0, "value": 0}
 
-    def reset(self):
-        self._balance = 0
-        # I suppose we might have a 'balance is 0' oberserver!
-        self.notify(None)
 
-    def add_income(self, amount):
-        self._balance += amount
 
-    def add_expense(self, amount):
-        self._balance -= amount
+class Controller:
+    def __init__(self):
+        self._history: list[Command] = []
 
-    def apply_transaction(self, transaction):
-        """
-        Apply a Transaction object to update the balance.
+    def execute_command(self, command: Command):
+        command.execute()
+        self._history.append(command)
+        return self
 
-        Args:
-            transaction (Transaction): The transaction to apply.
-        """
-        if transaction.category == TransactionCategory.INCOME:
-            self.add_income(transaction.amount)
-            self.notify(transaction)
-        elif transaction.category == TransactionCategory.EXPENSE:
-            self.add_expense(transaction.amount)
-            self.notify(transaction)
-        else:
-            raise ValueError(f"Unknown transaction category: {transaction.category}")
+    def undo_last_command(self):
+        if self._history:
+            last_command = self._history.pop()
+            last_command.undo()
 
-    def get_balance(self):
-        """Get the current net balance."""
-        return self._balance
+    def redo_last_command(self):
+        if self._history:
+            last_command = self._history[-1]
+            last_command.execute()
 
-    def summary(self):
-        """Return a summary string of the net balance."""
-        # When reporting as string, convert to float
-        float_balance = self._balance / 100 
-        return f"Balance object with balance: {float_balance:.2f}"
-    
+
