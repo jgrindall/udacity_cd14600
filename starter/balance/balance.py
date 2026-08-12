@@ -1,10 +1,41 @@
 # balance.py
-from typing import Union, Optional
+from typing import Optional
 from transaction.transaction_category import TransactionCategory
 from abc import ABC, abstractmethod
 
+class Observer(ABC):
+    @property
+    def logger(self):
+        return self._logger
 
-class Balance:
+    def __init__(self, logger: object | None = None):
+        self._logger = logger
+
+    @abstractmethod
+    def update(self, message: str):
+        pass
+
+
+class ObserverSubject(ABC):
+
+    _observers: list[Observer] = []
+
+    def __init__(self):
+        self._observers: list[Observer] = []
+
+    def register_observer(self, observer: Observer):
+        self._observers.append(observer)
+
+    def remove_observer(self, observer: Observer):
+        self._observers.remove(observer)
+
+    def notify(self, message: str):
+        for observer in self._observers:
+            observer.update(message)
+
+
+
+class Balance(ObserverSubject):
     """Singleton to track the balance."""
     _instance: Optional["Balance"] = None
 

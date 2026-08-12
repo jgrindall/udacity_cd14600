@@ -10,7 +10,7 @@ class Transaction:
         self.category = category
 
     def __str__(self):
-        return f"Transaction with amount={self.amount}, and category={self.category} )"
+        return f"Transaction(${self.amount}, category='{self.category}')"
 
     def __eq__(self, other):
         return self.amount == other.amount and self.category == other.category
