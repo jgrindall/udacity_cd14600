@@ -1,9 +1,11 @@
-# balance_observer.py
+# base_types.py
 from abc import ABC, abstractmethod
+from .balance import Balance
+from transaction.transaction import Transaction
 
 class IBalanceObserver(ABC):
     @abstractmethod
-    def update(self, balance, transaction):
+    def update(self, balance: Balance, transaction: Transaction | None = None):
         """Handle balance updates."""
         raise NotImplementedError("Subclasses must implement update method.")
 
@@ -21,7 +23,7 @@ class BalanceObserverSubject(ABC):
     def remove_observer(self, observer: IBalanceObserver):
         self._observers.remove(observer)
 
-    def notify(self, message: str):
+    def notify(self, transaction=None):
         for observer in self._observers:
-            observer.update(message)
+            observer.update(self, transaction)
 

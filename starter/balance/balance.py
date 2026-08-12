@@ -19,10 +19,12 @@ class Balance(BalanceObserverSubject):
         return cls._instance
 
     def __init__(self):
-        self._balance = 0;
+        self._balance = 0
 
     def reset(self):
         self._balance = 0
+        # I suppose we might have a 'balance is 0' oberserver!
+        self.notify(None)
 
     def add_income(self, amount):
         self._balance += amount
@@ -39,8 +41,10 @@ class Balance(BalanceObserverSubject):
         """
         if transaction.category == TransactionCategory.INCOME:
             self.add_income(transaction.amount)
+            self.notify(transaction)
         elif transaction.category == TransactionCategory.EXPENSE:
             self.add_expense(transaction.amount)
+            self.notify(transaction)
         else:
             raise ValueError(f"Unknown transaction category: {transaction.category}")
 

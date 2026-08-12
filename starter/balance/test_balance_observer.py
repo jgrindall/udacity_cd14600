@@ -17,6 +17,7 @@ class TestLowBalanceAlertObserver(unittest.TestCase):
         self.balance.apply_transaction(Transaction(100, TransactionCategory.INCOME))
         self.assertFalse(observer.alert_triggered)
 
+        #40 now
         self.balance.apply_transaction(Transaction(60, TransactionCategory.EXPENSE))
         self.assertTrue(observer.alert_triggered)
 
