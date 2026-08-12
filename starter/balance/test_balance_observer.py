@@ -2,7 +2,7 @@ import unittest
 from transaction.transaction import Transaction
 from transaction.transaction_category import TransactionCategory
 from balance.balance import Balance
-from starter.balance.balance_manager import LowBalanceAlertObserver
+from balance.balance_observer import LowBalanceAlertObserver
 
 class TestLowBalanceAlertObserver(unittest.TestCase):
 
