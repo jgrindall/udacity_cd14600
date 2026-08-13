@@ -1,10 +1,11 @@
 import unittest
+from unittest.mock import patch
 
 from transaction.transaction import Transaction
 from transaction.transaction_category import TransactionCategory
 
 from balance.balance import Balance
-from balance.balance_observer import LowBalanceAlertObserver
+from balance.balance_observer import LowBalanceAlertObserver, RecordingObserver, PrintObserver
 
 
 class TestLowBalanceAlertObserver(unittest.TestCase):
@@ -14,7 +15,6 @@ class TestLowBalanceAlertObserver(unittest.TestCase):
         self.balance.reset()
 
     def test_alert_triggers_on_low_balance(self):
-        print("Running test_alert_triggers_on_low_balance")
         observer = LowBalanceAlertObserver(threshold=50)
         self.balance.register_observer(observer)
 
@@ -68,6 +68,22 @@ class TestLowBalanceAlertObserver(unittest.TestCase):
         self.balance.redo()
         self.assertTrue(observer.alert_triggered)
         self.assertEqual(self.balance.get_balance(), 40)
+
+    def test_undo_redo_and_reset_notify_with_no_transaction(self):
+        self.balance.apply_transaction(Transaction(100, TransactionCategory.INCOME))
+        observer = RecordingObserver()
+        self.balance.register_observer(observer)
+        self.balance.undo()
+        self.assertEqual(observer.transactions, [None])
+        self.balance.remove_observer(observer)
+
+
+    def test_print_observer(self):
+        with patch("builtins.print") as mocked_print:
+            observer = PrintObserver()
+            self.balance.register_observer(observer)
+            self.balance.apply_transaction(Transaction(100, TransactionCategory.INCOME))
+            mocked_print.assert_called_once_with("balance updated: 100.0")
 
     def test_removing(self):
         observer = LowBalanceAlertObserver(threshold=50)

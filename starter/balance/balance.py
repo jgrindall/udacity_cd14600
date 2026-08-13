@@ -33,18 +33,13 @@ class Balance(BalanceObserverSubject):
         self._manager.reset()
 
     def add_income(self, amount):
-        print("Adding income:", amount)
         self._balance += amount
-        print("New balance:", self._balance)
 
     def add_expense(self, amount):
-        print("Adding expense:", amount)
         self._balance -= amount
-        print("New balance:", self._balance)
 
     def apply_transaction(self, transaction: Transaction):
         command = Command.from_transaction(transaction, self)  
-        print(f"Executing command: {command.__class__.__name__} with amount: {getattr(command, 'amount', 'N/A')}")
         command.execute()
         self._manager.add(command)
         self.notify(transaction)

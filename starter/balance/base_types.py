@@ -69,7 +69,6 @@ class AddIncomeCommand(Command):
         self.amount = amount
 
     def execute(self):
-        print(f"Executing AddIncomeCommand with amount: {self.amount}")
         self._balance.add_income(self.amount)
 
     def undo(self):
@@ -83,7 +82,6 @@ class AddExpenseCommand(Command):
         self.amount = amount
 
     def execute(self):
-        print(f"Executing AddExpenseCommand with amount: {self.amount}")
         self._balance.add_expense(self.amount)
 
     def undo(self):

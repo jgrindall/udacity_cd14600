@@ -1,8 +1,17 @@
 # balance_observer.py
-from abc import ABC, abstractmethod
-from balance.base_types import IBalanceObserver
 from transaction.transaction import Transaction
 
+from balance.base_types import IBalanceObserver
+
+
+class RecordingObserver(IBalanceObserver):
+    def __init__(self):
+        self.transactions = []
+
+    def update(self, balance, transaction=None):
+        """Record the transaction for logging"""
+        self.transactions.append(transaction)
+                
 class PrintObserver(IBalanceObserver):
     def update(self, balance, transaction: Transaction | None = None):
         """Print balance update message."""
@@ -23,7 +32,6 @@ class LowBalanceAlertObserver(IBalanceObserver):
         """Alert if balance drops below threshold."""
         balance = balance.get_balance()
         if balance < self.threshold:
-            print(f"Alert! Low balance: {balance} < {self.threshold}")
             self.alert_triggered = True
         else:
             self.alert_triggered = False
