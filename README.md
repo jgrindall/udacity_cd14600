@@ -1,6 +1,7 @@
 # Run the app
 
 > cd starter
+
 > python3 -m main.py
 
 Final balance: 1375.0
@@ -10,8 +11,11 @@ Final balance: 1375.0
 # Run the tests
 
 > cd starter
+
 > python3 -m unittest discover
+
 or
+
 > pytest
 
 
