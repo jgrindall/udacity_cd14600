@@ -21,6 +21,28 @@ class TestBalance(unittest.TestCase):
         self.balance.add_income(100)
         self.assertEqual(self.balance.get_balance(), 100)
 
+    def test_formatting_of_balance(self):
+
+        self.assertEqual(self.balance.summary(), "Balance object with balance: 0.00")
+
+        self.balance.add_income(100)
+        self.balance.add_expense(30)
+        self.assertEqual(self.balance.summary(), "Balance object with balance: 70.00")
+
+        self.balance.add_income(0.01)
+        self.assertEqual(self.balance.summary(), "Balance object with balance: 70.01")
+
+        self.balance.add_income(0.000001)
+        self.assertEqual(self.balance.summary(), "Balance object with balance: 70.01")
+
+        self.balance.reset()
+        self.assertEqual(self.balance.summary(), "Balance object with balance: 0.00")
+
+        self.balance.add_expense(30)
+        self.assertEqual(self.balance.summary(), "Balance object with balance: -30.00")
+
+
+
     def test_add_expense(self):
         self.balance.add_expense(40)
         self.assertEqual(self.balance.get_balance(), -40)
@@ -38,9 +60,8 @@ class TestBalance(unittest.TestCase):
     def test_apply_transaction_invalid_category(self):
         class FakeCategory:
             pass
-        t = Transaction(100, FakeCategory())
-        with self.assertRaises(ValueError):
-            self.balance.apply_transaction(t)
+        with self.assertRaises(TypeError):
+            _t = Transaction(100, FakeCategory())
 
     def test_reset(self):
         self.balance.add_income(100)

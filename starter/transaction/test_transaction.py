@@ -17,8 +17,20 @@ class TestTransaction(unittest.TestCase):
         t1 = Transaction(20, TransactionCategory.EXPENSE)
         t2 = Transaction(20, TransactionCategory.EXPENSE)
         t3 = Transaction(30, TransactionCategory.EXPENSE)
+        t4 = Transaction(30, TransactionCategory.INCOME)
         self.assertEqual(t1, t2)
         self.assertNotEqual(t1, t3)
+        self.assertNotEqual(t1, t4)
+        self.assertNotEqual(t3, t4)
+
+        t5 = {"amount": 20, "category": TransactionCategory.EXPENSE}
+        self.assertNotEqual(t1, t5)  # Ensure that a Transaction is not equal to a dictionary with the same data
+
+    def test_invalid_types(self):
+        with self.assertRaises(TypeError):
+            _t1 = Transaction("100", TransactionCategory.INCOME)
+        with self.assertRaises(TypeError):
+            _t2 = Transaction(100, "blahblah")
 
 if __name__ == "__main__":
     unittest.main()

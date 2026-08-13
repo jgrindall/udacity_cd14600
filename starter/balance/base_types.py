@@ -2,9 +2,8 @@
 from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
-from starter import transaction
-from starter.transaction import transaction
 from transaction.transaction import Transaction
+from transaction.transaction_category import TransactionCategory
 
 if TYPE_CHECKING:
     from .balance import Balance
@@ -55,9 +54,9 @@ class Command(ABC):
     @classmethod
     def from_transaction(cls, transaction: Transaction, balance: "Balance"):
         """Factory method to create a command based on the category."""
-        if transaction.category == "INCOME":
+        if transaction.category == TransactionCategory.INCOME:
             return AddIncomeCommand(balance, transaction.amount)
-        elif transaction.category == "EXPENSE":
+        elif transaction.category == TransactionCategory.EXPENSE:
             return AddExpenseCommand(balance, transaction.amount)
         else:
             raise ValueError(f"Unknown transaction category: {transaction.category}")
@@ -70,6 +69,7 @@ class AddIncomeCommand(Command):
         self.amount = amount
 
     def execute(self):
+        print(f"Executing AddIncomeCommand with amount: {self.amount}")
         self._balance.add_income(self.amount)
 
     def undo(self):
@@ -83,29 +83,55 @@ class AddExpenseCommand(Command):
         self.amount = amount
 
     def execute(self):
+        print(f"Executing AddExpenseCommand with amount: {self.amount}")
         self._balance.add_expense(self.amount)
 
     def undo(self):
         self._balance.add_income(self.amount)
 
 
-class Controller:
+class HistoryManager:
+
+    _history: list[Command]
+    _pointer: int
+
     def __init__(self):
-        self._history: list[Command] = []
+        self.reset()
 
-    def execute_command(self, command: Command):
-        command.execute()
+    def reset(self):
+        self._history = []
+        self._pointer: int = -1  # Points to the last executed command, one before the start for now
+
+    def add(self, command: Command):
+        # Discard any redo history if we are not at the end of the history. 
+        # eg  C1 C2 C3 C4 C5 C6 C7
+        #            ^                         - discard C4 onwards
+        self._history = self._history[:self._pointer + 1]
         self._history.append(command)
-        return self
-
+        self._pointer += 1
+        
     def undo(self):
-        if self._history:
-            last_command = self._history.pop()
-            last_command.undo()
+        if self._history and self._pointer >= 0:
+            command_to_undo = self._history[self._pointer]
+            command_to_undo.undo()
+            # eg  C1 C2 C3 C4 C5 C6 C7
+            #            ^
+            # undo C3 and move pointer back to C2
+            self._pointer -= 1
+        else:
+            raise Exception("No command to undo.")
 
     def redo(self):
-        if self._history:
-            last_command = self._history[-1]
-            last_command.execute()
+        if self._history and self._pointer < len(self._history) - 1:
+
+            # eg  C1 C2 C3 C4 C5 C6 C7
+            #            ^
+            # redo C4 and move pointer forward to C4
+
+            self._pointer += 1
+            command_to_redo = self._history[self._pointer]
+            command_to_redo.execute()        
+        else:
+            raise Exception("No command to redo.")
 
 
