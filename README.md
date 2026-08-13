@@ -1,68 +1,85 @@
-# Personal Finance Manager — Design Patterns Project
+# Run the app
 
-This project is a hands-on exercise in applying Object-Oriented Design Patterns to build a simplified personal finance manager.
-You will implement and extend starter code to add functionality such as tracking transactions, adapting external data, observing balance changes, and ensuring proper architectural patterns.
+> cd starter
+> python3 -m main.py
 
-## Getting Started
-
-### Dependencies
-
-Make sure you have python version >= 3.10.x installed on your computer. 
+Final balance: 1375.0
 
 
-### Installation
 
-1. Clone the repo:
+# Run the tests
 
-```
-bash
-git clone https://github.com/udacity/cd14600-project-starter.git
-cd cd14600-project-starter/starter
-```
+> cd starter
+> python3 -m unittest discover
+or
+> pytest
 
-2. Run the Program: 
-```
-python main.py
-```
 
-## Testing
+# Command pattern 
 
-This project uses Python’s built-in unittest framework.
+* I chose the Command Pattern, with a HistoryManager
 
-To run all tests:
+* It seems a good fit since undo/redo seems a natural thing to perform with transactions
+
+* Eg. when a mistake has been made
+
+* It improves scalablilty primarily through the
 
 ```
-python -m unittest discover
+Command::from_transaction
 ```
+ 
+method. When a new kind of transaction is added we don't need to touch the Balance class.
 
-To run a single test file:
-```
-python -m unittest balance/test_balance_observer.py
-```
+We could have added a Factory but that seems a bit overkill, so I made it a class method.
 
-### Break Down Tests
+* The HistoryManager stores a list of Commands
 
-- test_balance.py → Verifies correct implementation of the Singleton Balance class.
-- test_transaction.py → Confirms transactions update balances correctly.
-- test_transaction_adapter.py → Ensures external income data is correctly adapted into Transaction objects.
-- test_balance_observer.py → Validates that low-balance alerts are triggered at the correct threshold.
+* Each Command wraps a transaction
 
-## Project Instructions
+* Each Command has undo and redo
 
-1. Implement Singleton Balance Class – Ensure only one balance object exists throughout the app.
-2. Complete Transaction Class – Handle income and expense transactions.
-3. Implement Adapter Pattern – Adapt external freelance income data into internal Transaction objects.
-4. Implement Observer Pattern – Create a low balance observer that triggers an alert when funds drop too low.
-5. Add Unit Tests – Write tests for all implemented functionality.
-6. Choose and Implement a Fourth Pattern – Pick one additional design pattern (e.g., Strategy, Command, Decorator, etc.) and integrate it into your project.
-7. Provide a Reflection – Add a short write-up in your repo (README or separate file) explaining your design choices.
+* I decided to pass None as the "transaction" when received by an observer, which I think makes sense since there are no extra transactions.
 
-## Built With
+* It improves flexibiliy since we have control over how a Command wraps a transaction.
+It's a bit more future-proof than the original code which was just 
+type=INCOME -> add
+type=EXPENSE -> subtract
 
-* [Python](https://www.python.org/) – Main programming language
-* [unittest](https://docs.python.org/3/library/unittest.html) – Testing framework
-* [PEP8](https://peps.python.org/pep-0008/) – Style guide for Python code
+* I've added tests for the HistoryManager class. See test_balance_manager.py
 
-## License
+* Testability is improved since we have clear separation of concerns. You can create a HistoryManager using any class that extends Command, so it can be tested separately from a Balance.  In fact I decided to remove the command.execute() code (it used to be in the Manager). I put it back in the Balanace to keep this clean.
 
-[License](LICENSE.txt)
+
+
+
+
+# Reflection
+
+The design patterns used in this application are:
+
+* Observer
+* Command
+* Singleton
+* Adapter
+
+Observer improves the design by allowing us to listen to changes in an object oriented way.
+New observers can be added simply and, as long as they implement the interface, we are guaranteed that they will fire.
+They are quite pluggable and can be easily combined.
+
+Adapter allows us to interface in a simple way with the 'real world' - allowing us to use our code unchanged with slightly different input that doesnt' 100% fit the shape of our classes.
+
+The Singleton pattern lets us guarantee one balance instance.
+I'm not convinced it is a good fit, since it requires lots of "reset" calls to ensure it stays clean.
+
+The Command pattern is explained above. Commands wrap transactions and the HistoryManager allows undo/redo.
+
+One trade-off I made was that the observers receive None. I considered allowing a transaction to have a correspoding reverse transaction when undone.
+
+So Transaction(50, TransactionCategory.INCOME) -> undo -> get reverse transaction -> Transaction(50, TransactionCategory.INCOME_UNDO) or Transaction(50, TransactionCategory.EXPENSE) or perhaps
+(50, TransactionCategory.EDIT)
+
+It gets a bit complicated since then I would have to notify observers using these but I would have to be careful not to wrap these in a COmmand and insert them into the HistoryManager array!
+
+In the end I decided that None is acceptable.
+

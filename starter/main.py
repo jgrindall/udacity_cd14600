@@ -1,10 +1,10 @@
 """This module serves as the entry point for the program."""
 from balance.balance import Balance
-from starter.balance.balance_observer import LowBalanceAlertObserver
-from transaction.transaction import Transaction
-from transaction.transaction_category import TransactionCategory
-from transaction.transaction_adapter import TransactionAdapter
+from balance.balance_observer import LowBalanceAlertObserver
 from transaction.external_income_transaction import ExternalFreelanceIncome
+from transaction.transaction import Transaction
+from transaction.transaction_adapter import TransactionAdapter
+from transaction.transaction_category import TransactionCategory
 
 
 def main():
@@ -32,6 +32,9 @@ def main():
     # Apply all transactions to balance
     for t in all_transactions:
         balance.apply_transaction(t)
+
+    print("Final balance:", balance.get_balance())
+    assert balance.get_balance() == 1375, f"Expected balance to be 1375, but got {balance.get_balance()}"
 
 if __name__ == "__main__":
     main()
