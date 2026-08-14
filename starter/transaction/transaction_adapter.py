@@ -13,10 +13,12 @@ self.typ = "income"  # fixed, since it’s always income
 from transaction.transaction import Transaction
 from transaction.transaction_category import TransactionCategory
 
+
 class TransactionAdapter:
     def __init__(self, external_transaction):
         self.external_transaction = external_transaction
-        # eg. freelance_income = ExternalFreelanceIncome(1200, "INV-98765", "Mobile App Project")
+        # eg. freelance_income = ExternalFreelanceIncome(
+        #     1200, "INV-98765", "Mobile App Project")
 
     def to_transaction(self):
         """Convert an external transaction to a standard Transaction."""

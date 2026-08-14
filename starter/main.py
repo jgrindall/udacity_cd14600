@@ -8,7 +8,7 @@ from transaction.transaction_category import TransactionCategory
 
 
 def main():
-    
+
     balance = Balance.get_instance()
 
     obs1 = LowBalanceAlertObserver(threshold=50)
@@ -26,7 +26,8 @@ def main():
     ]
 
     # Create an external income transaction (via Adapter pattern)
-    freelance_income = ExternalFreelanceIncome(1200, "INV-98765", "Mobile App Project")
+    freelance_income = ExternalFreelanceIncome(
+        1200, "INV-98765", "Mobile App Project")
     adapter = TransactionAdapter(freelance_income)
     adapted_transaction = adapter.to_transaction()
 
@@ -38,7 +39,9 @@ def main():
         print("alert", obs1.alert_triggered)
 
     print("Final balance:", balance.get_balance())
-    assert balance.get_balance() == 1355, f"Expected balance to be 1355, but got {balance.get_balance()}"
+    assert balance.get_balance(
+    ) == 1355, f"Expected balance to be 1355, but got {balance.get_balance()}"
+
 
 if __name__ == "__main__":
     main()

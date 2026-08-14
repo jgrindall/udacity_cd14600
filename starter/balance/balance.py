@@ -5,14 +5,15 @@ from transaction.transaction import Transaction
 
 from balance.base_types import BalanceObserverSubject, Command, HistoryManager
 
+
 class Balance(BalanceObserverSubject):
     """Singleton to track the balance."""
     _instance: Optional["Balance"] = None
 
-    #always intialize the balance to 0
+    # always intialize the balance to 0
     _balance: float = 0.0
 
-    #manage the undo/redo stack
+    # manage the undo/redo stack
     _manager: HistoryManager = HistoryManager()
 
     @classmethod
@@ -42,7 +43,7 @@ class Balance(BalanceObserverSubject):
         self._balance -= amount
 
     def apply_transaction(self, transaction: Transaction):
-        command = Command.from_transaction(transaction, self)  
+        command = Command.from_transaction(transaction, self)
         command.execute()
         self._manager.add(command)
         self.notify(transaction)
@@ -65,4 +66,3 @@ class Balance(BalanceObserverSubject):
         """Return a summary string of the net balance."""
         # When reporting as string, convert to float
         return f"Balance object with balance: {self._balance:.2f}"
-    

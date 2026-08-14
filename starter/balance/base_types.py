@@ -8,9 +8,13 @@ from transaction.transaction_category import TransactionCategory
 if TYPE_CHECKING:
     from .balance import Balance
 
+
 class IBalanceObserver(ABC):
     @abstractmethod
-    def update(self, balance: "Balance", transaction: Transaction | None = None):
+    def update(
+            self,
+            balance: "Balance",
+            transaction: Transaction | None = None):
         """Handle balance updates."""
         raise NotImplementedError("Subclasses must implement update method.")
 
@@ -31,7 +35,6 @@ class BalanceObserverSubject(ABC):
     def notify(self, transaction=None):
         for observer in self._observers:
             observer.update(self, transaction)
-
 
 
 class Command(ABC):
@@ -59,8 +62,8 @@ class Command(ABC):
         elif transaction.category == TransactionCategory.EXPENSE:
             return AddExpenseCommand(balance, transaction.amount)
         else:
-            raise ValueError(f"Unknown transaction category: {transaction.category}")
-    
+            raise ValueError(
+                f"Unknown transaction category: {transaction.category}")
 
 
 class AddIncomeCommand(Command):
@@ -73,7 +76,6 @@ class AddIncomeCommand(Command):
 
     def undo(self):
         self._balance.add_expense(self.amount)
-
 
 
 class AddExpenseCommand(Command):
@@ -98,16 +100,17 @@ class HistoryManager:
 
     def reset(self):
         self._history = []
-        self._pointer: int = -1  # Points to the last executed command, one before the start for now
+        # Points to the last executed command, one before the start for now
+        self._pointer: int = -1
 
     def add(self, command: Command):
-        # Discard any redo history if we are not at the end of the history. 
+        # Discard any redo history if we are not at the end of the history.
         # eg  C1 C2 C3 C4 C5 C6 C7
         #            ^                         - discard C4 onwards
         self._history = self._history[:self._pointer + 1]
         self._history.append(command)
         self._pointer += 1
-        
+
     def undo(self):
         if self._history and self._pointer >= 0:
             command_to_undo = self._history[self._pointer]
@@ -128,8 +131,6 @@ class HistoryManager:
 
             self._pointer += 1
             command_to_redo = self._history[self._pointer]
-            command_to_redo.execute()        
+            command_to_redo.execute()
         else:
             raise Exception("No command to redo.")
-
-

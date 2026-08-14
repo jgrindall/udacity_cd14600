@@ -10,7 +10,9 @@ class Transaction:
         self.amount = amount
         self.category = category
         if not isinstance(category, TransactionCategory):
-            raise TypeError(f"Invalid category: {category}. Must be a TransactionCategory.")
+            raise TypeError(
+                f"Invalid category: {category}. "
+                "Must be a TransactionCategory.")
         if not isinstance(amount, (int, float)):
             raise TypeError(f"Invalid amount: {amount}. Must be a number.")
 

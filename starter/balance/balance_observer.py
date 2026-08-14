@@ -11,7 +11,8 @@ class RecordingObserver(IBalanceObserver):
     def update(self, balance, transaction=None):
         """Record the transaction for logging"""
         self.transactions.append(transaction)
-                
+
+
 class PrintObserver(IBalanceObserver):
     def update(self, balance, transaction: Transaction | None = None):
         """Print balance update message."""
