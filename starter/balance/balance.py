@@ -5,7 +5,6 @@ from transaction.transaction import Transaction
 
 from balance.base_types import BalanceObserverSubject, Command, HistoryManager
 
-
 class Balance(BalanceObserverSubject):
     """Singleton to track the balance."""
     _instance: Optional["Balance"] = None
@@ -19,10 +18,14 @@ class Balance(BalanceObserverSubject):
     @classmethod
     def get_instance(cls):
         if cls._instance is None:
-            cls._instance = cls()
+            instance = cls.__new__(cls)
+            cls._instance = instance
+            instance.__init__()
         return cls._instance
 
     def __init__(self):
+        if type(self)._instance is not self:
+            raise RuntimeError("Use Balance.get_instance()")
         self._balance = 0.0
 
     def reset(self):

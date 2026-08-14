@@ -69,5 +69,9 @@ class TestBalance(unittest.TestCase):
         self.balance.reset()
         self.assertEqual(self.balance.get_balance(), 0.0)
 
+    def test_single(self):
+        with self.assertRaises(RuntimeError):
+            _b = Balance()
+
 if __name__ == "__main__":
     unittest.main()
