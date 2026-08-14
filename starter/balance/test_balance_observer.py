@@ -5,7 +5,8 @@ from transaction.transaction import Transaction
 from transaction.transaction_category import TransactionCategory
 
 from balance.balance import Balance
-from balance.balance_observer import LowBalanceAlertObserver, RecordingObserver, PrintObserver
+from balance.balance_observer import (
+    LowBalanceAlertObserver, RecordingObserver, PrintObserver)
 
 
 class TestLowBalanceAlertObserver(unittest.TestCase):

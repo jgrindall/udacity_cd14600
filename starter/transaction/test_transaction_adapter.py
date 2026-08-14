@@ -16,5 +16,6 @@ class TestTransactionAdapter(unittest.TestCase):
         self.assertEqual(txn._metadata["invoice_id"], "INV-12345")
         self.assertEqual(txn._metadata["description"], "Website development")
 
+
 if __name__ == "__main__":
     unittest.main()

@@ -6,9 +6,12 @@ from transaction.transaction_category import TransactionCategory
 class Transaction:
     """Represents a financial transaction with an amount and category."""
 
+    _metadata: dict
+
     def __init__(self, amount, category: TransactionCategory):
         self.amount = amount
         self.category = category
+        self._metadata = {}
         if not isinstance(category, TransactionCategory):
             raise TypeError(
                 f"Invalid category: {category}. "
@@ -23,3 +26,7 @@ class Transaction:
         if not isinstance(other, Transaction):
             return False
         return self.amount == other.amount and self.category == other.category
+
+    def set_metadata(self, key, value):
+        """Set a metadata key-value pair for the transaction."""
+        self._metadata[key] = value

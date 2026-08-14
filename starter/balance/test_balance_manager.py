@@ -125,7 +125,8 @@ class TestBalanceManager(unittest.TestCase):
         self.balance.apply_transaction(
             Transaction(30, TransactionCategory.EXPENSE))
         with self.assertRaises(Exception):
-            self.balance.redo()  # Redo should fail because the redo history was overwritten
+            # Redo should fail because the redo history was overwritten
+            self.balance.redo()
 
     def test_order(self):
         self.balance.apply_transaction(

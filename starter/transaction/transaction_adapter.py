@@ -17,13 +17,14 @@ from transaction.transaction_category import TransactionCategory
 class TransactionAdapter:
     def __init__(self, external_transaction):
         self.external_transaction = external_transaction
-        # eg. freelance_income = ExternalFreelanceIncome(
-        #     1200, "INV-98765", "Mobile App Project")
+        # eg. freelance_income = ExternalFreelanceIncome(1200, "INV-98765", "Mobile App Project")
 
     def to_transaction(self):
         """Convert an external transaction to a standard Transaction."""
         # get the amount
         amount = self.external_transaction.amount
         # and use a real TransactionCategory. self.typ is always income, so we use INCOME!
-        # throw away description and invoice_id
-        return Transaction(amount, TransactionCategory.INCOME)
+        tx = Transaction(amount, TransactionCategory.INCOME)
+        tx.set_metadata("invoice_id", self.external_transaction.invoice_id)
+        tx.set_metadata("description", self.external_transaction.description)
+        return tx
